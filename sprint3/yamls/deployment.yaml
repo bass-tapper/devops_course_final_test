@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rick-api-deployment
+  labels:
+    app: rick-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rick-api
+  template:
+    metadata:
+      labels:
+        app: rick-api
+    spec:
+      containers:
+        - name: rick-api
+          image: rick-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"

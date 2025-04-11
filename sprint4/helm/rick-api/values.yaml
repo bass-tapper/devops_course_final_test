@@ -1,0 +1,18 @@
+replicaCount: 2
+
+image:
+  repository: rick-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  host: rick.local
+  path: /
+  pathType: Prefix
+
+resources: {}

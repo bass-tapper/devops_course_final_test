@@ -1,4 +1,3 @@
-
 name: CI/CD - Rick and Morty API Deployment
 
 on:
@@ -24,10 +23,11 @@ jobs:
       - name: Set up Helm CLI
         uses: azure/setup-helm@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Kind cluster
         run: |
+          kind delete cluster --name chart-testing || true
           kind create cluster --name chart-testing
 
       - name: Build Docker image
@@ -40,7 +40,10 @@ jobs:
 
       - name: Deploy Helm chart
         run: |
-          helm upgrade --install rick ./sprint4/helm/rick-api             --set image.repository=rick-api             --set image.tag=latest             --wait
+          helm upgrade --install rick ./sprint4/helm/rick-api \
+            --set image.repository=rick-api \
+            --set image.tag=latest \
+            --wait
 
       - name: Wait for deployment rollout
         run: |

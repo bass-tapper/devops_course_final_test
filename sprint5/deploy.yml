@@ -1,0 +1,52 @@
+
+name: CI/CD - Rick and Morty API Deployment
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Set up Kind (Kubernetes in Docker)
+        uses: helm/kind-action@v1
+
+      - name: Set up Helm CLI
+        uses: azure/setup-helm@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t rick-api:latest ./sprint2/app
+
+      - name: Load Docker image into Kind cluster
+        run: |
+          kind load docker-image rick-api:latest
+
+      - name: Deploy Helm chart
+        run: |
+          helm upgrade --install rick ./sprint4/helm/rick-api             --set image.repository=rick-api             --set image.tag=latest             --wait
+
+      - name: Wait for deployment rollout
+        run: |
+          kubectl rollout status deployment/$(kubectl get deploy -o jsonpath="{.items[0].metadata.name}")
+
+      - name: Port forward service
+        run: |
+          nohup kubectl port-forward svc/rick-api-rick 8888:80 &
+
+      - name: Wait for port-forward to be ready
+        run: sleep 10
+
+      - name: Test /healthcheck endpoint
+        run: |
+          curl --fail --retry 5 --retry-delay 3 http://localhost:8888/healthcheck

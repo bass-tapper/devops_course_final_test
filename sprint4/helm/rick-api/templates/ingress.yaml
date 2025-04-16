@@ -6,28 +6,19 @@ metadata:
   labels:
     {{- include "rick-api.labels" . | nindent 4 }}
     {{- include "rick-api.chartLabels" . | nindent 4 }}
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   rules:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-          - path: {{ .Values.ingress.path }}
-            pathType: {{ .Values.ingress.pathType }}
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: {{ include "rick-api.fullname" . }}
                 port:
                   number: {{ .Values.service.port }}
+
 {{- end }}
-# This Ingress resource is used to expose the Rick API service to the outside world.
-# It uses the NGINX Ingress Controller to handle incoming HTTP requests.
-# The Ingress resource is configured to route traffic based on the host and path specified in the values file.
-# The `rewrite-target` annotation is used to rewrite the URL path before forwarding the request to the backend service.
-# The `host` field specifies the domain name for the Ingress resource.
-# The `path` field specifies the URL path to match for incoming requests.
-# The `pathType` field specifies the type of path matching to use (e.g., Prefix).
-# The `backend` field specifies the service to route traffic to, including the service name and port number.
-# The `enabled` field in the values file controls whether the Ingress resource is created or not.
-# If `enabled` is set to `false`, the Ingress resource will not be created.

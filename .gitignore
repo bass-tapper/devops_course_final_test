@@ -1,5 +1,18 @@
+# macOS files
 .DS_Store
-venv/
-*.zip
+
+# Python cache
 __pycache__/
 *.pyc
+
+# Virtualenv
+venv/
+
+# Logs
+*.log
+*.zip
+*.tar.gz
+
+# IDEs/editors
+.idea/
+.vscode/

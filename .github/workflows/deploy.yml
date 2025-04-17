@@ -40,7 +40,7 @@ jobs:
 
       - name: Load Docker image into Kind cluster
         run: |
-          kind load docker-image rick-api:latest
+          kind load docker-image rick-api:latest --name chart-testing
 
       - name: Deploy Helm chart
         run: |

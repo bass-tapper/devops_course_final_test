@@ -1,3 +1,4 @@
+
 name: CI/CD - Rick and Morty API Deployment
 
 on:
@@ -25,9 +26,12 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Kind cluster
+      - name: Delete any existing Kind cluster (cleanup before create)
         run: |
           kind delete cluster --name chart-testing || true
+
+      - name: Create Kind cluster
+        run: |
           kind create cluster --name chart-testing
 
       - name: Build Docker image
@@ -40,10 +44,7 @@ jobs:
 
       - name: Deploy Helm chart
         run: |
-          helm upgrade --install rick ./sprint4/helm/rick-api \
-            --set image.repository=rick-api \
-            --set image.tag=latest \
-            --wait
+          helm upgrade --install rick ./sprint4/helm/rick-api             --set image.repository=rick-api             --set image.tag=latest             --wait
 
       - name: Wait for deployment rollout
         run: |

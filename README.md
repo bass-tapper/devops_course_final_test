@@ -13,6 +13,7 @@ This project demonstrates a complete DevOps workflow to build, containerize, dep
 ├── sprint2/app/              # Flask API + Docker setup
 ├── sprint3/yamls/            # Raw Kubernetes manifests
 ├── sprint4/helm/rick-api/    # Helm chart to deploy the app
+└── sprint5/                  # README.md file of CI/CD overview
 └── .github/workflows/        # GitHub Actions CI/CD pipeline
 ```
 
